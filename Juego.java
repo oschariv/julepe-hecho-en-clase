@@ -108,7 +108,15 @@ public class Juego
      */
     private int encontrarPosicionJugadorPorNombre(String nombre)
     {
+        int posicion = -1;
         
+        for (int i = 0; i < jugadores.length; i++) {
+            if (jugadores[i].getNombre().equals(nombre)) {
+               posicion = i;
+            }
+        }
+        
+        return posicion;
     }
     
         

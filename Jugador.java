@@ -131,7 +131,6 @@ public class Jugador
         return tirarCartaAleatoria();        
     }
     
-    
     /**
      * Metodo que hace que jugador recoja una baza ganada
      */

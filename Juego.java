@@ -13,7 +13,6 @@ public class Juego
     private Mazo mazo;
     private int paloQuePinta;
 
-
     /**
      * Constructor de la clase Juego
      *
@@ -55,11 +54,10 @@ public class Juego
             System.out.println(jugadores[i].getNombre());
         }
         System.out.println();
-        
+
         jugar();
     }
-    
-    
+
     /**
      * M√©todo que reparte 5 cartas a cada uno de los jugadores presentes en
      * la partida y elige un palo para que pinte.
@@ -96,8 +94,6 @@ public class Juego
 
         return paloQuePinta;           
     }
-   
-
 
     /**
      * Devuelve la posici√≥n del jugador cuyo nombre se especifica como
@@ -109,17 +105,20 @@ public class Juego
     private int encontrarPosicionJugadorPorNombre(String nombre)
     {
         int posicion = -1;
+        boolean buscando = true;
+        int i = 0;
         
-        for (int i = 0; i < jugadores.length; i++) {
+        while (i < jugadores.length && buscando){
             if (jugadores[i].getNombre().equals(nombre)) {
-               posicion = i;
+                posicion = i;
+                buscando = false;
             }
+            i++;
         }
         
         return posicion;
     }
-    
-        
+
     /**
      * Desarrolla una partida de julepe teniendo en cuenta que el mazo y los
      * jugadores ya han sido creados. 
@@ -145,20 +144,68 @@ public class Juego
      */
     private void jugar()
     {
-
+        Scanner escaner = new Scanner(System.in);
         
-    }    
+        // Repartimos cartas a todos los jugadores.
+        repartir();
+        
+        // Bucle para jugar la mano entera.
+        for (int i = 0; i < 5; i++){
+            System.out.println("");
+            // Mostramos la mano del jugador. Se actualizan las cartas automaticamente.
+            System.out.println("Estas son tus cartas: ");
+            jugadores[0].verCartasJugador();
+            
+            
+            System.out.println("");
+            // Bucle para comprobar que el jugador lanza un carta correcta en cada baza.
+            Carta cartaALanzar = null;
+            while (cartaALanzar == null) {
+                System.out.println("øQue carta desea lanzar?");
+                cartaALanzar = jugadores[0].tirarCarta(escaner.nextLine());
+            }
+            
+            System.out.println("");
+            // Creamos la baza y aÒadimos la carta del jugador humano a la baza.
+            Baza baza = new Baza(jugadores.length, paloQuePinta);
+            baza.addCarta(cartaALanzar, jugadores[0].getNombre());
+            // AÒadimos las cartas de los bot a la baza.
+            for (int cont = 1; cont < jugadores.length; cont++) {
+                Carta cartaBot = jugadores[cont].tirarCartaInteligentemente(baza.getPaloPrimeraCartaDeLaBaza(),
+                    baza.cartaQueVaGanandoLaBaza(), paloQuePinta);
+                    baza.addCarta(cartaBot, jugadores[cont].getNombre());
+            }
+            
+            System.out.println("");
+            // Imprimos que jugador a ganado la baza en la mano correspondiente.
+            System.out.println("El jugador que ha ganado la baza es: " + 
+                baza.nombreJugadorQueVaGanandoLaBaza() + " con la carta: " + 
+                baza.cartaQueVaGanandoLaBaza());
+                
+            System.out.println("");
+            // AÒadimos la baza al jugador que la ha ganado.
+            jugadores[encontrarPosicionJugadorPorNombre(baza.nombreJugadorQueVaGanandoLaBaza())].addBaza(baza);
+        } 
+        
+        System.out.println("");
+        // Mostramos el numero de bazas que ha hecho el jugador humano.
+        System.out.println("El jugador " + jugadores[0].getNombre() + " ha hecho " +
+            jugadores[0].getNumeroBazasGanadas() + " bazas");
+        
+        System.out.println("");
+        // Comprobamos e imprimimos si ha conseguido hacer julepe.
+        if (jugadores[0].getNumeroBazasGanadas() < 2) {
+            System.out.println("El jugador " + jugadores[0].getNombre() + 
+                " ha hecho JULEPE!");
+        }
+        else {
+            System.out.println("El jugador " + jugadores[0].getNombre() + 
+            " no ha hecho JULEPE!");
+        }
+        
+        System.out.println("");
+        // Mostramos que ha finalizado el juego.
+        System.out.println("FIN DEL JUEGO!");
+    }
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

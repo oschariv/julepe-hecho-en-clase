@@ -11,7 +11,8 @@ public class Juego
 {
     private Jugador[] jugadores;
     private Mazo mazo;
-    private int paloQuePinta;
+    private Palo paloQuePinta;
+    private static final int RONDAS = 5;
 
     /**
      * Constructor de la clase Juego
@@ -64,7 +65,7 @@ public class Juego
      *
      * @return El palo que pinta tras repartir
      */
-    private int repartir() 
+    private Palo repartir() 
     {
         mazo.barajar();
 
@@ -78,16 +79,16 @@ public class Juego
 
         paloQuePinta = nuevaCarta.getPalo();
         switch (paloQuePinta) {
-            case 0:
+            case OROS:
             System.out.println("Pintan oros");
             break;
-            case 1:
+            case COPAS:
             System.out.println("Pintan copas");
             break;
-            case 2:
+            case ESPADAS:
             System.out.println("Pintan espadas");
             break;
-            case 3:
+            case BASTOS:
             System.out.println("Pintan bastos");
             break;
         }
@@ -107,7 +108,7 @@ public class Juego
         int posicion = -1;
         boolean buscando = true;
         int i = 0;
-        
+
         while (i < jugadores.length && buscando){
             if (jugadores[i].getNombre().equals(nombre)) {
                 posicion = i;
@@ -115,7 +116,7 @@ public class Juego
             }
             i++;
         }
-        
+
         return posicion;
     }
 
@@ -145,18 +146,17 @@ public class Juego
     private void jugar()
     {
         Scanner escaner = new Scanner(System.in);
-        
+
         // Repartimos cartas a todos los jugadores.
         repartir();
-        
+
         // Bucle para jugar la mano entera.
-        for (int i = 0; i < 5; i++){
+        for (int i = 0; i < RONDAS; i++){
             System.out.println("");
             // Mostramos la mano del jugador. Se actualizan las cartas automaticamente.
             System.out.println("Estas son tus cartas: ");
             jugadores[0].verCartasJugador();
-            
-            
+
             System.out.println("");
             // Bucle para comprobar que el jugador lanza un carta correcta en cada baza.
             Carta cartaALanzar = null;
@@ -164,7 +164,7 @@ public class Juego
                 System.out.println("¿Que carta desea lanzar?");
                 cartaALanzar = jugadores[0].tirarCarta(escaner.nextLine());
             }
-            
+
             System.out.println("");
             // Creamos la baza y añadimos la carta del jugador humano a la baza.
             Baza baza = new Baza(jugadores.length, paloQuePinta);
@@ -172,26 +172,26 @@ public class Juego
             // Añadimos las cartas de los bot a la baza.
             for (int cont = 1; cont < jugadores.length; cont++) {
                 Carta cartaBot = jugadores[cont].tirarCartaInteligentemente(baza.getPaloPrimeraCartaDeLaBaza(),
-                    baza.cartaQueVaGanandoLaBaza(), paloQuePinta);
-                    baza.addCarta(cartaBot, jugadores[cont].getNombre());
+                        baza.cartaQueVaGanandoLaBaza(), paloQuePinta);
+                baza.addCarta(cartaBot, jugadores[cont].getNombre());
             }
-            
+
             System.out.println("");
             // Imprimos que jugador a ganado la baza en la mano correspondiente.
             System.out.println("El jugador que ha ganado la baza es: " + 
                 baza.nombreJugadorQueVaGanandoLaBaza() + " con la carta: " + 
                 baza.cartaQueVaGanandoLaBaza());
-                
+
             System.out.println("");
             // Añadimos la baza al jugador que la ha ganado.
             jugadores[encontrarPosicionJugadorPorNombre(baza.nombreJugadorQueVaGanandoLaBaza())].addBaza(baza);
         } 
-        
+
         System.out.println("");
         // Mostramos el numero de bazas que ha hecho el jugador humano.
         System.out.println("El jugador " + jugadores[0].getNombre() + " ha hecho " +
             jugadores[0].getNumeroBazasGanadas() + " bazas");
-        
+
         System.out.println("");
         // Comprobamos e imprimimos si ha conseguido hacer julepe.
         if (jugadores[0].getNumeroBazasGanadas() < 2) {
@@ -200,9 +200,9 @@ public class Juego
         }
         else {
             System.out.println("El jugador " + jugadores[0].getNombre() + 
-            " no ha hecho JULEPE!");
+                " no ha hecho JULEPE!");
         }
-        
+
         System.out.println("");
         // Mostramos que ha finalizado el juego.
         System.out.println("FIN DEL JUEGO!");

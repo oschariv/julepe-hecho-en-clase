@@ -11,12 +11,12 @@ public class Baza
     private int cartasEnLaBaza;
     private Carta cartaQueVaGanando;
     private String nombreJugadorQueVaGanando;
-    private int paloQuePinta;
+    private Palo paloQuePinta;
 
     /**
      * Constructor for objects of class Baza
      */
-    public Baza(int numeroJugadores, int paloQuePinta)
+    public Baza(int numeroJugadores, Palo paloQuePinta)
     {
         cartasEnLaBaza = 0;
         cartasDeLaBaza = new Carta[numeroJugadores];
@@ -42,9 +42,9 @@ public class Baza
 
     }
     
-    public int getPaloPrimeraCartaDeLaBaza()
+    public Palo getPaloPrimeraCartaDeLaBaza()
     {
-        int paloPrimeraCarta = -1;
+        Palo paloPrimeraCarta = null;
         
         if (cartasEnLaBaza != 0) {
             paloPrimeraCarta = cartasDeLaBaza[0].getPalo();
